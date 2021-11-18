@@ -12,7 +12,7 @@ class Evaluator {
   void Evaluate();
 
  private:
-  std::ifstream current_file_;
+  std::ifstream trace_file_;
   BufferManager* buffer_manager_;
 };
 

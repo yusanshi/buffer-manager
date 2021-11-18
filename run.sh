@@ -1,1 +1,10 @@
-g++ src/*.cc src/buffer_manager/*.cc -o manager.out && ./manager.out
+#!/bin/bash
+set -e
+
+mkdir -p build
+cd build
+cmake ..
+make
+cd ..
+mv build/manager manager.out
+./manager.out 2>&1 | tee ${1:-manager}.log

@@ -1,25 +1,41 @@
 #include <iostream>
 
-#include "buffer_manager/clock_buffer_manager.h"
-#include "buffer_manager/lru_2_buffer_manager.h"
-#include "buffer_manager/lru_buffer_manager.h"
+#include "buffer_manager.h"
 #include "common.h"
+#include "cxxopts.h"
 #include "evaluator.h"
+#include "replacer/clock_replacer.h"
+#include "replacer/lru_2_replacer.h"
+#include "replacer/lru_replacer.h"
 #include "storage_manager.h"
 
-int main() {
-  StorageManager storage_manager(STORAGE_FILEPATH);
-  BufferManager* buffer_manager;
-  if (REPLACEMENT_POLICY == ReplacementPolicy::LRU) {
-    buffer_manager = new LRUBufferManager();
-  } else if (REPLACEMENT_POLICY == ReplacementPolicy::LRU_2) {
-    buffer_manager = new LRU2BufferManager();
-  } else if (REPLACEMENT_POLICY == ReplacementPolicy::CLOCK) {
-    buffer_manager = new ClockBufferManager();
+int main(int argc, char** argv) {
+  cxxopts::Options options("Storage Buffer Manager", "Storage Buffer Manager");
+  options.add_options()("r,replacement",
+                        "Replacement policy, choose among [LRU, LRU_2, CLOCK]",
+                        cxxopts::value<std::string>()->default_value("LRU"))(
+      "h,help", "Print usage");
+  auto result = options.parse(argc, argv);
+  if (result.count("help")) {
+    std::cout << options.help() << std::endl;
+    std::exit(EXIT_SUCCESS);
+  }
+  StorageManager* storage_manager = new StorageManager(STORAGE_FILEPATH);
+  std::string replacement_policy = result["replacement"].as<std::string>();
+  Replacer* replacer;
+  if (replacement_policy == "LRU") {
+    replacer = new LRUReplacer();
+  } else if (replacement_policy == "LRU_2") {
+    replacer = new LRU2Replacer();
+  } else if (replacement_policy == "CLOCK") {
+    replacer = new ClockReplacer();
   } else {
     throw std::logic_error("Invalid replacement policy.");
   }
-  buffer_manager->AttachStorageManager(&storage_manager);
+  BufferManager* buffer_manager = new BufferManager(storage_manager, replacer);
+
   Evaluator evaluator(TRACE_FILEPATH, buffer_manager);
   evaluator.Evaluate();
+  delete buffer_manager;
+  delete storage_manager;
 }
