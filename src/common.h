@@ -1,14 +1,14 @@
 #ifndef COMMON_H_
 #define COMMON_H_
 
-#define FRAME_OR_PAGE_SIZE 4096
+#define PAGE_SIZE 4096
 #define BUFFER_SIZE 1024
 #define NUM_PAGES 50000
 #define STORAGE_FILEPATH "data/data.dbf"
 #define TRACE_FILEPATH "data/data-5w-50w-zipf.txt"
 
 struct Page {
-  char field[FRAME_OR_PAGE_SIZE];
+  char field[PAGE_SIZE];
 };
 
 struct CacheDescriptor {
@@ -16,7 +16,6 @@ struct CacheDescriptor {
   int page_id;
   bool latch = false;
   int pin_count = 0;
-  bool dirty = false;
 };
 
 #endif  // COMMON_H_

@@ -15,8 +15,6 @@ class StorageManager {
 
  private:
   std::fstream storage_file_;
-  int num_pages_;
-  int pages_[NUM_PAGES];
   int read_count_ = 0;
   int write_count_ = 0;
   void ReportPerformance();

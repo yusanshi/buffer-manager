@@ -8,6 +8,11 @@
 #include "replacer/replacer.h"
 #include "storage_manager.h"
 
+struct PageTable {
+  int frame_id;
+  bool dirty;
+};
+
 class BufferManager {
  public:
   BufferManager(StorageManager* storage_manager, Replacer* replacer);
@@ -21,10 +26,10 @@ class BufferManager {
   std::array<Page, BUFFER_SIZE> buffer_;
   StorageManager* storage_manager_;
   Replacer* replacer_;
-  std::unordered_map<int, int> page2frame_;
+  std::unordered_map<int, PageTable> page_table_;
   int hit_count_ = 0;
   int miss_count_ = 0;
-  int GetFrameID(int page_id);
+  int RequestFrame(int page_id, bool dirty);
   void ReportPerformance();
 };
 
