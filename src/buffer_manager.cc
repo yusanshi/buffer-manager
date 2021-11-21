@@ -21,6 +21,7 @@ BufferManager::~BufferManager() {
 }
 
 Page BufferManager::ReadFrame(int frame_id) { return this->buffer_[frame_id]; }
+
 void BufferManager::WriteFrame(int frame_id, Page page) {
   this->buffer_[frame_id] = page;
 }

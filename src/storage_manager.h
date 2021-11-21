@@ -10,7 +10,9 @@ class StorageManager {
  public:
   StorageManager(std::string storage_filepath);
   ~StorageManager();
+  // Read page `page_id` from storage file.
   Page ReadPage(int page_id);
+  // Write page `page` to storage file at `page_id`.
   void WritePage(int page_id, Page page);
 
  private:

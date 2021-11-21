@@ -4,7 +4,7 @@
 #include <list>
 #include <unordered_map>
 
-#include "../common.h"
+#include "common.h"
 #include "replacer.h"
 
 struct ClockCacheDescriptor : CacheDescriptor {};

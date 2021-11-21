@@ -19,4 +19,4 @@ file(GLOB_RECURSE SOURCE CONFIGURE_DEPENDS
 
 add_executable(manager ${SOURCE})
 
-
+include_directories(src)

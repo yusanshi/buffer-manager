@@ -4,7 +4,7 @@
 #include <list>
 #include <unordered_map>
 
-#include "../common.h"  //TODO: include relative or absolute path?
+#include "common.h"
 #include "replacer.h"
 
 struct LRUCacheDescriptor : CacheDescriptor {};

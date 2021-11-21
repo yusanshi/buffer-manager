@@ -39,7 +39,6 @@ Page StorageManager::ReadPage(int page_id) {
 }
 
 void StorageManager::WritePage(int page_id, Page page) {
-  // TODO is page changed? use &?
   std::cout << "Writing page " << page_id << " to storage file" << std::endl;
   this->write_count_ += 1;
   this->storage_file_.seekp(PAGE_SIZE * page_id, std::ios::beg);

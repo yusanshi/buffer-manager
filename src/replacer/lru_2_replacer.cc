@@ -1,4 +1,4 @@
-#include "lru_2_replacer.h"
+#include "replacer/lru_2_replacer.h"
 
 int LRU2Replacer::GetVictim() { return 0; }
 

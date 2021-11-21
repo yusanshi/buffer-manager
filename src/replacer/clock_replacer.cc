@@ -1,4 +1,4 @@
-#include "clock_replacer.h"
+#include "replacer/clock_replacer.h"
 
 int ClockReplacer::GetVictim() { return 0; }
 
