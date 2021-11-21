@@ -7,4 +7,3 @@ cmake ..
 make
 cd ..
 mv build/manager manager.out
-./manager.out 2>&1 | tee ${1:-manager}.log

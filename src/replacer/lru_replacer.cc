@@ -12,7 +12,7 @@ int LRUReplacer::GetVictim() {
       return cache_descriptor->page_id;
     }
   }
-  return -1;
+  throw std::runtime_error("Failed to get a victim frame.");
 }
 
 void LRUReplacer::IncreasePinCount(int page_id) {

@@ -7,7 +7,9 @@
 #include "common.h"
 #include "replacer.h"
 
-struct LRU2CacheDescriptor : CacheDescriptor {};
+struct LRU2CacheDescriptor : CacheDescriptor {
+  int access_count = 0;
+};
 
 class LRU2Replacer : public Replacer {
  public:
@@ -17,9 +19,16 @@ class LRU2Replacer : public Replacer {
   void DecreasePinCount(int page_id);
 
  private:
-  std::unordered_map<int, LRU2CacheDescriptor*> frame_id_to_cache_pointer_;
-  std::unordered_map<int, LRU2CacheDescriptor*> page2cache_;
-  std::list<LRU2CacheDescriptor> cache_list_;
+  std::unordered_map<int, std::list<LRU2CacheDescriptor *>::iterator>
+      page2cold_cache_;
+  std::unordered_map<int, std::list<LRU2CacheDescriptor *>::iterator>
+      page2hot_cache_;
+  std::list<LRU2CacheDescriptor *> cold_cache_list_;
+  std::list<LRU2CacheDescriptor *> hot_cache_list_;
+  int GetVictimFromSingle(
+      std::list<LRU2CacheDescriptor *> &cache_list,
+      std::unordered_map<int, std::list<LRU2CacheDescriptor *>::iterator>
+          &page2cache);
 };
 
 #endif  // LRU_2_REPLACER_H_

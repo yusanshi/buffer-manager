@@ -5,9 +5,9 @@
 
 class Replacer {
  public:
-  // Select a victim frame and return its id. Only the frames with 0 `pin_count`
-  // can be victims. Throw error if all frames has non-zero `pin_count`.
-  // Only use this when the buffer is full.
+  // Select a victim frame and return its corresponding page id. Only the frames
+  // with 0 `pin_count` can be victims. Throw error if all frames has non-zero
+  // `pin_count`. Only use this when the buffer is full.
   virtual int GetVictim() = 0;
   // When the page `page_id` is requested and the buffer manager has return
   // `frame_id`, the method will be called. It's a hook function for

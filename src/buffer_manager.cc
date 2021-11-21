@@ -69,21 +69,18 @@ int BufferManager::RequestFrame(int page_id, bool dirty) {
 
   // Finally, try to get a victim frame ...
   int victim_page_id = this->replacer_->GetVictim();
-  if (victim_page_id != -1) {
-    std::cout << "Page " << page_id
-              << " not found in cache and buffer is full, found a victim frame"
-              << std::endl;
-    auto [victim_frame_id, victim_dirty] = this->page_table_.at(victim_page_id);
-    if (victim_dirty) {
-      this->storage_manager_->WritePage(victim_page_id,
-                                        this->buffer_[victim_frame_id]);
-    }
-    this->buffer_[victim_frame_id] = this->storage_manager_->ReadPage(page_id);
-    this->page_table_.erase(victim_page_id);
-    this->page_table_[page_id] = PageTable{victim_frame_id, dirty};
-    return victim_frame_id;
+  std::cout << "Page " << page_id
+            << " not found in cache and buffer is full, found a victim frame"
+            << std::endl;
+  auto [victim_frame_id, victim_dirty] = this->page_table_.at(victim_page_id);
+  if (victim_dirty) {
+    this->storage_manager_->WritePage(victim_page_id,
+                                      this->buffer_[victim_frame_id]);
   }
-  throw std::runtime_error("Failed to get a victim frame.");
+  this->buffer_[victim_frame_id] = this->storage_manager_->ReadPage(page_id);
+  this->page_table_.erase(victim_page_id);
+  this->page_table_[page_id] = PageTable{victim_frame_id, dirty};
+  return victim_frame_id;
 }
 
 void BufferManager::ReportPerformance() {
