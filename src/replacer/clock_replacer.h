@@ -7,7 +7,9 @@
 #include "common.h"
 #include "replacer.h"
 
-struct ClockCacheDescriptor : CacheDescriptor {};
+struct ClockCacheDescriptor : CacheDescriptor {
+  bool referenced = true;
+};
 
 class ClockReplacer : public Replacer {
  public:
@@ -17,9 +19,13 @@ class ClockReplacer : public Replacer {
   void DecreasePinCount(int page_id);
 
  private:
-  std::unordered_map<int, ClockCacheDescriptor*> frame_id_to_cache_pointer_;
-  std::unordered_map<int, ClockCacheDescriptor*> page2cache_;
-  std::list<ClockCacheDescriptor> cache_list_;
+  std::unordered_map<int, std::list<ClockCacheDescriptor *>::iterator>
+      page2cache_;
+  std::list<ClockCacheDescriptor *> cache_list_;
+  std::list<ClockCacheDescriptor *>::iterator pointer_;
+  bool full_ = false;
+  std::list<ClockCacheDescriptor *>::iterator NextPointer();
+  std::list<ClockCacheDescriptor *>::iterator PrevPointer();
 };
 
 #endif  // CLOCK_REPLACER_H_

@@ -1,6 +1,5 @@
 #include "replacer/lru_2_replacer.h"
 
-// TODO without &?
 int LRU2Replacer::GetVictimFromSingle(
     std::list<LRU2CacheDescriptor *> &cache_list,
     std::unordered_map<int, std::list<LRU2CacheDescriptor *>::iterator>
