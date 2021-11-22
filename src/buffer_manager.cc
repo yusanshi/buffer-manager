@@ -37,19 +37,19 @@ void BufferManager::UnfixPage(int page_id) {
 }
 
 int BufferManager::RequestFrame(int page_id, bool dirty) {
-  // If find in cache
+  // If found in cache
   if (this->page_table_.find(page_id) != this->page_table_.end()) {
     this->hit_count_ += 1;
     std::cout << "Page " << page_id << " found in cache" << std::endl;
-    this->page_table_.at(page_id).dirty =
-        dirty || this->page_table_.at(page_id).dirty;
-    int frame_id = this->page_table_.at(page_id).frame_id;
-    this->replacer_->PostHookFound(page_id, frame_id);
+    this->page_table_[page_id].dirty =
+        dirty || this->page_table_[page_id].dirty;
+    int frame_id = this->page_table_[page_id].frame_id;
+    this->replacer_->HookFound(page_id, frame_id);
     return frame_id;
   }
   this->miss_count_ += 1;
 
-  // If buffer is not full, allocate a new frame
+  // If not found in cache and buffer is not full, allocate a new frame
   int buffer_size = this->buffer_.size();
   if (this->page_table_.size() < buffer_size) {
     std::cout << "Page " << page_id
@@ -62,19 +62,18 @@ int BufferManager::RequestFrame(int page_id, bool dirty) {
         int frame_id = j;
         this->buffer_[frame_id] = this->storage_manager_->ReadPage(page_id);
         this->page_table_[page_id] = PageTable{frame_id, dirty};
-        this->replacer_->PostHookNotFoundNotFull(page_id, frame_id);
+        this->replacer_->HookNotFoundNotFull(page_id, frame_id);
         return frame_id;
       }
     }
   }
 
-  // Finally, try to get a victim frame ...
+  // If not found and buffer is full, try to get a victim frame ...
   int victim_page_id = this->replacer_->GetVictim(page_id);
   std::cout << "Page " << page_id
             << " not found in cache and buffer is full, found a victim frame"
             << std::endl;
-  auto [victim_frame_id, victim_dirty] = this->page_table_.at(victim_page_id);
-  // TODO: at vs opeator []
+  auto [victim_frame_id, victim_dirty] = this->page_table_[victim_page_id];
   if (victim_dirty) {
     this->storage_manager_->WritePage(victim_page_id,
                                       this->buffer_[victim_frame_id]);

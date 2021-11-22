@@ -14,8 +14,8 @@ struct LRU2CacheDescriptor : CacheDescriptor {
 class LRU2Replacer : public Replacer {
  public:
   int GetVictim(int page_id);
-  void PostHookFound(int page_id, int frame_id);
-  void PostHookNotFoundNotFull(int page_id, int frame_id);
+  void HookFound(int page_id, int frame_id);
+  void HookNotFoundNotFull(int page_id, int frame_id);
   void IncreasePinCount(int page_id);
   void DecreasePinCount(int page_id);
 

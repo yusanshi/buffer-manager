@@ -20,20 +20,24 @@ int ClockReplacer::GetVictim(int page_id) {
   throw std::runtime_error("Failed to get a victim frame.");
 }
 
-void ClockReplacer::PostHookFound(int page_id, int frame_id) {}
+// Do nothing if found in cache :)
+void ClockReplacer::HookFound(int page_id, int frame_id) {}
 
-void ClockReplacer::PostHookNotFoundNotFull(int page_id, int frame_id) {
+// If found in cache and cache it not full, create it
+void ClockReplacer::HookNotFoundNotFull(int page_id, int frame_id) {
   ClockCacheDescriptor *cache_descriptor;
   cache_descriptor = new ClockCacheDescriptor();
   cache_descriptor->page_id = page_id;
   cache_descriptor->frame_id = frame_id;
   // false for better performance
   cache_descriptor->referenced = false;
-  //   this->cache_list_.push_back(cache_descriptor);
-  //   this->page2cache_[page_id] = std::prev(this->cache_list_.end());
+  // this->cache_list_.push_back(cache_descriptor);
+  // this->page2cache_[page_id] = std::prev(this->cache_list_.end());
   this->cache_list_.push_front(cache_descriptor);
   this->page2cache_[page_id] = this->cache_list_.begin();
 
+  // Set the pointer when buffer becomes full, or `this->pointer_` will point to
+  // list end, which make no sense and cannot be spinned.
   if (this->cache_list_.size() == BUFFER_SIZE) {
     this->pointer_ = this->cache_list_.begin();
   }

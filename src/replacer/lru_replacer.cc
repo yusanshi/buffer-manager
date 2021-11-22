@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+// Try to select a victim frame from back to front and move the frame to front
+// (because it is now used by the new page)
 int LRUReplacer::GetVictim(int page_id) {
   for (auto i = this->cache_list_.rbegin(); i != this->cache_list_.rend();
        ++i) {
@@ -27,13 +29,14 @@ void LRUReplacer::DecreasePinCount(int page_id) {
   (*this->page2cache_[page_id])->pin_count -= 1;
 }
 
-void LRUReplacer::PostHookFound(int page_id, int frame_id) {
+// If found in cache, move the cache descriptor to front
+void LRUReplacer::HookFound(int page_id, int frame_id) {
   this->cache_list_.splice(this->cache_list_.begin(), this->cache_list_,
                            this->page2cache_[page_id]);
 }
 
-void LRUReplacer::PostHookNotFoundNotFull(int page_id, int frame_id) {
-  // If not in LRU list, create it and push front
+// If not found in cache and cache it not full, create it and push front
+void LRUReplacer::HookNotFoundNotFull(int page_id, int frame_id) {
   LRUCacheDescriptor* cache_descriptor;
   cache_descriptor = new LRUCacheDescriptor();
   cache_descriptor->page_id = page_id;

@@ -6,6 +6,8 @@
 #define NUM_PAGES 50000
 #define STORAGE_FILEPATH "data/data.dbf"
 #define TRACE_FILEPATH "data/data-5w-50w-zipf.txt"
+// Set to true to do real reading/writing from/to storage
+#define PROCESS_IO false
 
 struct Page {
   char field[PAGE_SIZE];
