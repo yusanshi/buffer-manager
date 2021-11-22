@@ -85,9 +85,9 @@ int BufferManager::RequestFrame(int page_id, bool dirty) {
 
 void BufferManager::ReportPerformance() {
   std::cout << "Buffer manager:" << std::endl;
-  std::cout << "Hit count:" << this->hit_count_ << std::endl;
-  std::cout << "Miss count:" << this->miss_count_ << std::endl;
-  std::cout << "Hit rate:"
+  std::cout << "Hit count: " << this->hit_count_
+            << "\tMiss count: " << this->miss_count_ << std::endl;
+  std::cout << "Hit rate: "
             << static_cast<float>(this->hit_count_) /
                    (this->hit_count_ + this->miss_count_)
             << std::endl;

@@ -47,6 +47,6 @@ void StorageManager::WritePage(int page_id, Page page) {
 
 void StorageManager::ReportPerformance() {
   std::cout << "Storage manager:" << std::endl;
-  std::cout << "Read count:" << this->read_count_ << std::endl;
-  std::cout << "Write count:" << this->write_count_ << std::endl;
+  std::cout << "Read count: " << this->read_count_
+            << "\tWrite count: " << this->write_count_ << std::endl;
 }
