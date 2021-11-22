@@ -28,7 +28,6 @@ void BufferManager::WriteFrame(int frame_id, Page page) {
 
 int BufferManager::FixPage(int page_id, bool dirty) {
   int frame_id = this->RequestFrame(page_id, dirty);
-  this->replacer_->PolishPage(page_id, frame_id);
   this->replacer_->IncreasePinCount(page_id);
   return frame_id;
 }
@@ -45,6 +44,7 @@ int BufferManager::RequestFrame(int page_id, bool dirty) {
     this->page_table_.at(page_id).dirty =
         dirty || this->page_table_.at(page_id).dirty;
     int frame_id = this->page_table_.at(page_id).frame_id;
+    this->replacer_->PostHookFound(page_id, frame_id);
     return frame_id;
   }
   this->miss_count_ += 1;
@@ -62,17 +62,19 @@ int BufferManager::RequestFrame(int page_id, bool dirty) {
         int frame_id = j;
         this->buffer_[frame_id] = this->storage_manager_->ReadPage(page_id);
         this->page_table_[page_id] = PageTable{frame_id, dirty};
+        this->replacer_->PostHookNotFoundNotFull(page_id, frame_id);
         return frame_id;
       }
     }
   }
 
   // Finally, try to get a victim frame ...
-  int victim_page_id = this->replacer_->GetVictim();
+  int victim_page_id = this->replacer_->GetVictim(page_id);
   std::cout << "Page " << page_id
             << " not found in cache and buffer is full, found a victim frame"
             << std::endl;
   auto [victim_frame_id, victim_dirty] = this->page_table_.at(victim_page_id);
+  // TODO: at vs opeator []
   if (victim_dirty) {
     this->storage_manager_->WritePage(victim_page_id,
                                       this->buffer_[victim_frame_id]);

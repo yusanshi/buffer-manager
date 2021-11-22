@@ -1,7 +1,6 @@
 #include "evaluator.h"
 
 #include <iostream>
-#include <vector>
 
 Evaluator::Evaluator(std::string trace_filepath,
                      BufferManager* buffer_manager) {

@@ -11,8 +11,9 @@ struct LRUCacheDescriptor : CacheDescriptor {};
 
 class LRUReplacer : public Replacer {
  public:
-  int GetVictim();
-  void PolishPage(int page_id, int frame_id);
+  int GetVictim(int page_id);
+  void PostHookFound(int page_id, int frame_id);
+  void PostHookNotFoundNotFull(int page_id, int frame_id);
   void IncreasePinCount(int page_id);
   void DecreasePinCount(int page_id);
 

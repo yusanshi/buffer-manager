@@ -13,8 +13,9 @@ struct LRU2CacheDescriptor : CacheDescriptor {
 
 class LRU2Replacer : public Replacer {
  public:
-  int GetVictim();
-  void PolishPage(int page_id, int frame_id);
+  int GetVictim(int page_id);
+  void PostHookFound(int page_id, int frame_id);
+  void PostHookNotFoundNotFull(int page_id, int frame_id);
   void IncreasePinCount(int page_id);
   void DecreasePinCount(int page_id);
 
@@ -25,10 +26,6 @@ class LRU2Replacer : public Replacer {
       page2hot_cache_;
   std::list<LRU2CacheDescriptor *> cold_cache_list_;
   std::list<LRU2CacheDescriptor *> hot_cache_list_;
-  int GetVictimFromSingle(
-      std::list<LRU2CacheDescriptor *> &cache_list,
-      std::unordered_map<int, std::list<LRU2CacheDescriptor *>::iterator>
-          &page2cache);
 };
 
 #endif  // LRU_2_REPLACER_H_
