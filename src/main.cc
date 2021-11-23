@@ -10,7 +10,7 @@
 #include "storage_manager.h"
 
 int main(int argc, char** argv) {
-  cxxopts::Options options("Storage Buffer Manager", "Storage Buffer Manager");
+  cxxopts::Options options("Buffer Manager", "Buffer Manager");
   options.add_options()("r,replacement",
                         "Replacement policy, choose among [LRU, LRU_2, CLOCK]",
                         cxxopts::value<std::string>()->default_value("LRU"))(

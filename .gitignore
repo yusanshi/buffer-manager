@@ -1,10 +1,9 @@
 data/
+build/
+log/
 doc/*
 !doc/*.md
 src/cxxopts.h
-
-build/
-log/
 *.out
 
 

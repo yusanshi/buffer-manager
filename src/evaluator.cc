@@ -18,7 +18,7 @@ Evaluator::Evaluator(std::string trace_filepath, BufferManager* buffer_manager,
   char delimiter;
   while ((trace_file >> mode >> delimiter >> page_id) && (delimiter == ',')) {
     page_id -= 1;
-    this->trace_file_data.push_back(std::make_pair(mode, page_id));
+    this->trace_file_data_.push_back(std::make_pair(mode, page_id));
   }
   this->begin_time_ = CurrentTime();
 }
@@ -48,9 +48,9 @@ void Evaluator::EvaluateSingleThread(int rank) {
   // Use `std::cout << "1" + "2"` instead of `std::cout << "1" << "2"` in
   // multithreading settings to avoid interweaved outputs
   std::cout << "[" + std::to_string(rank) + "] Running evaluation...\n";
-  for (int i = rank; i < this->trace_file_data.size();
+  for (int i = rank; i < this->trace_file_data_.size();
        i += this->num_threads_) {
-    auto [mode, page_id] = this->trace_file_data[i];
+    auto [mode, page_id] = this->trace_file_data_[i];
     this->buffer_manager_->FixPage(page_id);
     if (mode == 0) {
       Page data = this->buffer_manager_->ReadPage(page_id);

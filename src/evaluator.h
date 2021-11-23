@@ -16,7 +16,7 @@ class Evaluator {
   void EvaluateSingleThread(int rank);
 
  private:
-  std::vector<std::pair<int, int>> trace_file_data;
+  std::vector<std::pair<int, int>> trace_file_data_;
   BufferManager* buffer_manager_;
   int num_threads_;
   std::chrono::steady_clock::time_point begin_time_;
