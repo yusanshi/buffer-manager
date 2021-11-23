@@ -19,15 +19,14 @@ void Evaluator::Evaluate() {
   while ((this->trace_file_ >> mode >> delimiter >> page_id) &&
          (delimiter == ',')) {
     page_id -= 1;
-    if (mode != 0 and mode != 1) {
-      throw std::runtime_error("Bad trace format.");
-    }
-    int frame_id = this->buffer_manager_->FixPage(page_id, mode);
+    this->buffer_manager_->FixPage(page_id);
     if (mode == 0) {
-      Page data = this->buffer_manager_->ReadFrame(frame_id);
+      Page data = this->buffer_manager_->ReadPage(page_id);
     } else if (mode == 1) {
       Page data;
-      this->buffer_manager_->WriteFrame(frame_id, data);
+      this->buffer_manager_->WritePage(page_id, data);
+    } else {
+      throw std::runtime_error("Bad trace format.");
     }
     this->buffer_manager_->UnfixPage(page_id);
   }

@@ -20,14 +20,19 @@ BufferManager::~BufferManager() {
   this->ReportPerformance();
 }
 
-Page BufferManager::ReadFrame(int frame_id) { return this->buffer_[frame_id]; }
+Page BufferManager::ReadPage(int page_id) {
+  int frame_id = this->page_table_[page_id].frame_id;
+  return this->buffer_[frame_id];
+}
 
-void BufferManager::WriteFrame(int frame_id, Page page) {
+void BufferManager::WritePage(int page_id, Page page) {
+  this->page_table_[page_id].dirty = true;
+  int frame_id = this->page_table_[page_id].frame_id;
   this->buffer_[frame_id] = page;
 }
 
-int BufferManager::FixPage(int page_id, bool dirty) {
-  int frame_id = this->RequestFrame(page_id, dirty);
+int BufferManager::FixPage(int page_id) {
+  int frame_id = this->RequestFrame(page_id);
   this->replacer_->IncreasePinCount(page_id);
   return frame_id;
 }
@@ -36,13 +41,11 @@ void BufferManager::UnfixPage(int page_id) {
   this->replacer_->DecreasePinCount(page_id);
 }
 
-int BufferManager::RequestFrame(int page_id, bool dirty) {
+int BufferManager::RequestFrame(int page_id) {
   // If found in cache
   if (this->page_table_.find(page_id) != this->page_table_.end()) {
     this->hit_count_ += 1;
     std::cout << "Page " << page_id << " found in cache" << std::endl;
-    this->page_table_[page_id].dirty =
-        dirty || this->page_table_[page_id].dirty;
     int frame_id = this->page_table_[page_id].frame_id;
     this->replacer_->HookFound(page_id, frame_id);
     return frame_id;
@@ -61,7 +64,7 @@ int BufferManager::RequestFrame(int page_id, bool dirty) {
       if (this->page_table_.find(j) == this->page_table_.end()) {
         int frame_id = j;
         this->buffer_[frame_id] = this->storage_manager_->ReadPage(page_id);
-        this->page_table_[page_id] = PageTable{frame_id, dirty};
+        this->page_table_[page_id] = PageTable{frame_id, false};
         this->replacer_->HookNotFoundNotFull(page_id, frame_id);
         return frame_id;
       }
@@ -80,7 +83,7 @@ int BufferManager::RequestFrame(int page_id, bool dirty) {
   }
   this->buffer_[victim_frame_id] = this->storage_manager_->ReadPage(page_id);
   this->page_table_.erase(victim_page_id);
-  this->page_table_[page_id] = PageTable{victim_frame_id, dirty};
+  this->page_table_[page_id] = PageTable{victim_frame_id, false};
   return victim_frame_id;
 }
 
