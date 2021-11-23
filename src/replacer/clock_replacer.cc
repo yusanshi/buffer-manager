@@ -23,7 +23,7 @@ int ClockReplacer::GetVictim(int page_id) {
 // Do nothing if found in cache :)
 void ClockReplacer::HookFound(int page_id, int frame_id) {}
 
-// If found in cache and cache it not full, create it
+// If not found in cache and cache is not full, create it
 void ClockReplacer::HookNotFoundNotFull(int page_id, int frame_id) {
   ClockCacheDescriptor *cache_descriptor;
   cache_descriptor = new ClockCacheDescriptor();

@@ -21,8 +21,8 @@ class BufferManager {
   // Read page from buffer. The page must be in buffer (by calling
   // `FixPage`)
   Page ReadPage(int page_id);
-  // Write `page` to buffer. The page must be in buffer (by calling
-  // `FixPage`)
+  // Write `page` to buffer and set the dirty flag. The page must be in buffer
+  // (by calling `FixPage`)
   void WritePage(int page_id, Page page);
   // Pin the page in buffer.
   int FixPage(int page_id);
@@ -40,7 +40,6 @@ class BufferManager {
   std::mutex mutex_;
   // Return a frame id for page `page_id`.
   // Insert the entry into the `page_table_` if not exists.
-  // Set `dirty` flag in `page_table_`.
   int RequestFrame(int page_id);
   void ReportPerformance();
 };

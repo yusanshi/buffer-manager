@@ -35,7 +35,7 @@ void LRUReplacer::HookFound(int page_id, int frame_id) {
                            this->page2cache_[page_id]);
 }
 
-// If not found in cache and cache it not full, create it and push front
+// If not found in cache and cache is not full, create it and push front
 void LRUReplacer::HookNotFoundNotFull(int page_id, int frame_id) {
   LRUCacheDescriptor* cache_descriptor;
   cache_descriptor = new LRUCacheDescriptor();
