@@ -2,6 +2,7 @@
 #define BUFFER_MANAGER_H_
 
 #include <array>
+#include <mutex>
 #include <unordered_map>
 
 #include "common.h"
@@ -36,6 +37,7 @@ class BufferManager {
   std::unordered_map<int, PageTable> page_table_;
   int hit_count_ = 0;
   int miss_count_ = 0;
+  std::mutex mutex_;
   // Return a frame id for page `page_id`.
   // Insert the entry into the `page_table_` if not exists.
   // Set `dirty` flag in `page_table_`.

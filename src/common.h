@@ -8,6 +8,7 @@
 #define TRACE_FILEPATH "data/data-5w-50w-zipf.txt"
 // Set to true to do real reading/writing from/to storage
 #define PROCESS_IO false
+#define VERBOSE false
 
 struct Page {
   char field[PAGE_SIZE];
@@ -16,7 +17,6 @@ struct Page {
 struct CacheDescriptor {
   int frame_id;
   int page_id;
-  bool latch = false;
   int pin_count = 0;
 };
 

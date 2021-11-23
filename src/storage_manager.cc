@@ -30,7 +30,10 @@ StorageManager::StorageManager(std::string storage_filepath) {
 StorageManager::~StorageManager() { this->ReportPerformance(); }
 
 Page StorageManager::ReadPage(int page_id) {
-  std::cout << "Reading page " << page_id << " from storage file" << std::endl;
+  if (VERBOSE) {
+    std::cout << "Reading page " << page_id << " from storage file"
+              << std::endl;
+  }
   this->read_count_ += 1;
   Page page;
   if (PROCESS_IO) {
@@ -41,7 +44,9 @@ Page StorageManager::ReadPage(int page_id) {
 }
 
 void StorageManager::WritePage(int page_id, Page page) {
-  std::cout << "Writing page " << page_id << " to storage file" << std::endl;
+  if (VERBOSE) {
+    std::cout << "Writing page " << page_id << " to storage file" << std::endl;
+  }
   this->write_count_ += 1;
   if (PROCESS_IO) {
     this->storage_file_.seekp(PAGE_SIZE * page_id, std::ios::beg);
@@ -50,7 +55,6 @@ void StorageManager::WritePage(int page_id, Page page) {
 }
 
 void StorageManager::ReportPerformance() {
-  std::cout << "Storage manager:" << std::endl;
   std::cout << "Read count: " << this->read_count_
             << "\tWrite count: " << this->write_count_ << std::endl;
 }

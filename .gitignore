@@ -4,8 +4,9 @@ doc/*
 src/cxxopts.h
 
 build/
+log/
 *.out
-*.log
+
 
 CMakeLists.txt.user
 CMakeCache.txt

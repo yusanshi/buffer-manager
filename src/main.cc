@@ -14,7 +14,8 @@ int main(int argc, char** argv) {
   options.add_options()("r,replacement",
                         "Replacement policy, choose among [LRU, LRU_2, CLOCK]",
                         cxxopts::value<std::string>()->default_value("LRU"))(
-      "h,help", "Print usage");
+      "t,threads", "Thread number",
+      cxxopts::value<int>()->default_value("1"))("h,help", "Print usage");
   auto result = options.parse(argc, argv);
   if (result.count("help")) {
     std::cout << options.help() << std::endl;
@@ -34,8 +35,8 @@ int main(int argc, char** argv) {
   }
   BufferManager* buffer_manager = new BufferManager(storage_manager, replacer);
 
-  Evaluator evaluator(TRACE_FILEPATH, buffer_manager);
+  int num_threads = result["threads"].as<int>();
+  Evaluator evaluator(TRACE_FILEPATH, buffer_manager, num_threads);
   evaluator.Evaluate();
   delete buffer_manager;
-  delete storage_manager;
 }

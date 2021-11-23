@@ -17,6 +17,9 @@ file(GLOB_RECURSE SOURCE CONFIGURE_DEPENDS
   src/*.cc
 )
 
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
 add_executable(manager ${SOURCE})
+target_link_libraries(manager Threads::Threads)
 
 include_directories(src)
