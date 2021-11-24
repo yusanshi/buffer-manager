@@ -27,11 +27,11 @@ mv build/manager manager.out
 
 ### Run
 ```bash
-for replacement in LRU LRU_2 CLOCK
+for round in {1..5}
 do
-    for threads in 1 2 4
+    for replacement in LRU LRU_2 CLOCK
     do
-        for round in {1..5}
+        for threads in 1 2 4 8 16 32 64
         do
             echo "Running with ${replacement} replacement policy, ${threads} thread(s), round ${round}"
             ./manager.out -r ${replacement} -t ${threads} > ./log/replacement_${replacement}_threads_${threads}_round_${round}.log
@@ -55,15 +55,15 @@ cat ./log/stat.md
 
 | Metric | Hit count | Miss count | Hit rate | Read count | Write count |
 | --- | --- | --- | --- | --- | --- |
-| LRU | 169595.7 | 330404.3 | 0.33919 | 330404.3 | 173009.0 |
-| LRU_2 | 218257.1 | 281742.9 | 0.43651 | 281742.9 | 138518.7 |
-| CLOCK | 151661.0 | 348339.0 | 0.30332 | 348339.0 | 187638.2 |
+| LRU | 169526.0 | 330474.0 | 0.33905 | 330474.0 | 172998.0 |
+| LRU_2 | 220135.9 | 279864.1 | 0.44027 | 279864.1 | 137691.4 |
+| CLOCK | 151716.9 | 348283.1 | 0.30343 | 348283.1 | 187500.0 |
 
 
 **Elapsed time (s)**
 
-| Num threads | 1 | 2 | 4 |
-| --- | --- | --- | --- |
-| LRU | 0.79798 | 1.1963 | 2.7819 |
-| LRU_2 | 0.80892 | 1.0908 | 2.2246 |
-| CLOCK | 0.88087 | 1.1679 | 2.5819 |
+| Num threads | 1 | 2 | 4 | 8 | 16 | 32 | 64 |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| LRU | 0.59896 | 0.46262 | 0.25943 | 0.17273 | 0.22395 | 0.31268 | 0.53427 |
+| LRU_2 | 0.51739 | 0.43775 | 0.23887 | 0.16150 | 0.21834 | 0.31531 | 0.50202 |
+| CLOCK | 0.52234 | 0.42577 | 0.24467 | 0.17332 | 0.19876 | 0.27798 | 0.44931 |

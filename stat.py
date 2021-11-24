@@ -3,7 +3,7 @@ import re
 import math
 
 policy_list = ['LRU', 'LRU_2', 'CLOCK']
-num_threads_list = [1, 2, 4]
+num_threads_list = [1, 2, 4, 8, 16, 32, 64]
 metric_list = [
     'Hit count', 'Miss count', 'Hit rate', 'Read count', 'Write count',
     'Elapsed time'

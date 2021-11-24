@@ -1,5 +1,7 @@
 #include "replacer/clock_replacer.h"
 
+ClockReplacer::ClockReplacer(int buffer_size) : buffer_size_(buffer_size) {}
+
 int ClockReplacer::GetVictim(int page_id) {
   for (auto i = 0; i < 2 * this->cache_list_.size(); i++) {
     auto cache_descriptor = *this->pointer_;
@@ -38,7 +40,7 @@ void ClockReplacer::HookNotFoundNotFull(int page_id, int frame_id) {
 
   // Set the pointer when buffer becomes full, or `this->pointer_` will point to
   // list end, which make no sense and cannot be spinned.
-  if (this->cache_list_.size() == BUFFER_SIZE) {
+  if (this->cache_list_.size() == this->buffer_size_) {
     this->pointer_ = this->cache_list_.begin();
   }
 }

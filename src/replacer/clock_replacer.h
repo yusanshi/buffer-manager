@@ -13,6 +13,7 @@ struct ClockCacheDescriptor : CacheDescriptor {
 
 class ClockReplacer : public Replacer {
  public:
+  ClockReplacer(int buffer_size);
   int GetVictim(int page_id);
   void HookFound(int page_id, int frame_id);
   void HookNotFoundNotFull(int page_id, int frame_id);
@@ -24,6 +25,7 @@ class ClockReplacer : public Replacer {
       page2cache_;
   std::list<ClockCacheDescriptor *> cache_list_;
   std::list<ClockCacheDescriptor *>::iterator pointer_;
+  int buffer_size_;
   void SpinPointer();
 };
 
