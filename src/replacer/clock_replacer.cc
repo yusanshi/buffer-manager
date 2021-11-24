@@ -11,7 +11,7 @@ int ClockReplacer::GetVictim(int page_id) {
         int victim_page_id = cache_descriptor->page_id;
         cache_descriptor->referenced = true;
         cache_descriptor->page_id = page_id;
-        this->page2cache_[page_id] = this->page2cache_[victim_page_id];
+        this->page2cache_[page_id] = this->page2cache_.at(victim_page_id);
         this->page2cache_.erase(victim_page_id);
         return victim_page_id;
       }
@@ -44,11 +44,11 @@ void ClockReplacer::HookNotFoundNotFull(int page_id, int frame_id) {
 }
 
 void ClockReplacer::IncreasePinCount(int page_id) {
-  (*this->page2cache_[page_id])->pin_count += 1;
+  (*this->page2cache_.at(page_id))->pin_count += 1;
 }
 
 void ClockReplacer::DecreasePinCount(int page_id) {
-  (*this->page2cache_[page_id])->pin_count -= 1;
+  (*this->page2cache_.at(page_id))->pin_count -= 1;
 }
 
 void ClockReplacer::SpinPointer() {

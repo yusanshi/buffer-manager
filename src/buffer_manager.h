@@ -2,6 +2,7 @@
 #define BUFFER_MANAGER_H_
 
 #include <array>
+#include <atomic>
 #include <mutex>
 #include <unordered_map>
 
@@ -35,9 +36,13 @@ class BufferManager {
   Replacer* replacer_;
   // Map currently in-buffer page id to frame id and dirty flag.
   std::unordered_map<int, PageTable> page_table_;
-  int hit_count_ = 0;
-  int miss_count_ = 0;
-  std::mutex mutex_;
+  std::atomic<int> hit_count_ = 0;
+  std::atomic<int> miss_count_ = 0;
+  std::array<std::mutex, NUM_PAGES> page_id_lock_;
+  std::mutex buffer_lock_;
+  std::mutex storage_manager_lock_;
+  std::mutex replacer_lock_;
+  std::mutex page_table_lock_;
   // Return a frame id for page `page_id`.
   // Insert the entry into the `page_table_` if not exists.
   int RequestFrame(int page_id);

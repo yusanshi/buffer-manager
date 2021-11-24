@@ -12,8 +12,8 @@ int LRUReplacer::GetVictim(int page_id) {
       int victim_page_id = cache_descriptor->page_id;
       cache_descriptor->page_id = page_id;
       this->cache_list_.splice(this->cache_list_.begin(), this->cache_list_,
-                               this->page2cache_[victim_page_id]);
-      this->page2cache_[page_id] = this->page2cache_[victim_page_id];
+                               this->page2cache_.at(victim_page_id));
+      this->page2cache_[page_id] = this->page2cache_.at(victim_page_id);
       this->page2cache_.erase(victim_page_id);
       return victim_page_id;
     }
@@ -22,17 +22,17 @@ int LRUReplacer::GetVictim(int page_id) {
 }
 
 void LRUReplacer::IncreasePinCount(int page_id) {
-  (*this->page2cache_[page_id])->pin_count += 1;
+  (*this->page2cache_.at(page_id))->pin_count += 1;
 }
 
 void LRUReplacer::DecreasePinCount(int page_id) {
-  (*this->page2cache_[page_id])->pin_count -= 1;
+  (*this->page2cache_.at(page_id))->pin_count -= 1;
 }
 
 // If found in cache, move the cache descriptor to front
 void LRUReplacer::HookFound(int page_id, int frame_id) {
   this->cache_list_.splice(this->cache_list_.begin(), this->cache_list_,
-                           this->page2cache_[page_id]);
+                           this->page2cache_.at(page_id));
 }
 
 // If not found in cache and cache is not full, create it and push front
