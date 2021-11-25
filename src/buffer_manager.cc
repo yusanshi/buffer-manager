@@ -21,8 +21,6 @@ BufferManager::~BufferManager() {
       this->storage_manager_->WritePage(page_id, this->buffer_[frame_id]);
     }
   }
-
-  delete this->replacer_;
 }
 
 Page BufferManager::ReadPage(int page_id) {

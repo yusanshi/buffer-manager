@@ -1,11 +1,13 @@
 import os
 import re
 import math
+import numpy as np
+import matplotlib.pyplot as plt
 
 policy_list = ['LRU', 'LRU_2', 'CLOCK']
 num_threads_list = [1, 2, 4, 8, 16, 32, 64]
 metric_list = [
-    'Hit count', 'Miss count', 'Hit rate', 'Read count', 'Write count',
+    'Hit rate', 'Hit count', 'Miss count', 'Read count', 'Write count',
     'Elapsed time'
 ]
 
@@ -96,3 +98,41 @@ print('**Hit rate and IO**\n')
 print(dict2table(hit_rate_and_IO_stat, corner_name='Metric'))
 print('**Elapsed time (s)**\n')
 print(dict2table(time_stat, corner_name='Num threads'))
+
+fig, (ax1, ax2) = plt.subplots(2, 1)
+# make a little extra space between the subplots
+fig.subplots_adjust(hspace=0.5)
+
+width = 0.15
+keys = list(hit_rate_and_IO_stat.values())[0].keys()
+x = np.arange(len(keys))
+ax1_twin = ax1.twinx()
+
+for i, (key, value) in enumerate(hit_rate_and_IO_stat.items()):
+    bars = ax1.bar(x[:1] + (1 - len(hit_rate_and_IO_stat)) / 2 * width +
+                   width * i, [value['Hit rate']],
+                   width=width,
+                   label=key)
+    bars = ax1_twin.bar(x[1:] + (1 - len(hit_rate_and_IO_stat)) / 2 * width +
+                        width * i,
+                        [v for k, v in value.items() if k != 'Hit rate'],
+                        width=width,
+                        label=key)
+
+ax1.set_xlabel('Metric', labelpad=8)
+ax1.set_ylabel('Rate')
+ax1.set_ylim(0, 1)
+ax1_twin.set_ylabel('Count')
+ax1.set_xticks(x)
+ax1.set_xticklabels(keys)
+ax1.legend(fontsize=8)
+
+for key, value in time_stat.items():
+    ax2.plot([str(x) for x in value.keys()], value.values(), label=key)
+
+ax2.set_xlabel('Num threads')
+ax2.set_ylabel('Elapsed time (s)')
+ax2.legend(fontsize=8)
+
+# plt.show()
+plt.savefig('./log/stat.svg', bbox_inches='tight')

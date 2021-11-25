@@ -27,7 +27,7 @@ mv build/manager manager.out
 
 ### Run
 ```bash
-for round in {1..5}
+for round in {1..10}
 do
     for replacement in LRU LRU_2 CLOCK
     do
@@ -49,21 +49,29 @@ python3 stat.py > ./log/stat.md
 cat ./log/stat.md
 ```
 
-> The following is taken from `./log/stat.md`.
+The following is taken from `./log/stat.md`:
 
 **Hit rate and IO**
 
-| Metric | Hit count | Miss count | Hit rate | Read count | Write count |
+| Metric | Hit rate | Hit count | Miss count | Read count | Write count |
 | --- | --- | --- | --- | --- | --- |
-| LRU | 169526.0 | 330474.0 | 0.33905 | 330474.0 | 172998.0 |
-| LRU_2 | 220135.9 | 279864.1 | 0.44027 | 279864.1 | 137691.4 |
-| CLOCK | 151716.9 | 348283.1 | 0.30343 | 348283.1 | 187500.0 |
+| LRU | 0.33905 | 169526.0 | 330474.0 | 330474.0 | 172998.0 |
+| LRU_2 | 0.44027 | 220135.9 | 279864.1 | 279864.1 | 137691.4 |
+| CLOCK | 0.30343 | 151716.9 | 348283.1 | 348283.1 | 187500.0 |
 
 
 **Elapsed time (s)**
 
 | Num threads | 1 | 2 | 4 | 8 | 16 | 32 | 64 |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| LRU | 0.59896 | 0.46262 | 0.25943 | 0.17273 | 0.22395 | 0.31268 | 0.53427 |
-| LRU_2 | 0.51739 | 0.43775 | 0.23887 | 0.16150 | 0.21834 | 0.31531 | 0.50202 |
-| CLOCK | 0.52234 | 0.42577 | 0.24467 | 0.17332 | 0.19876 | 0.27798 | 0.44931 |
+| LRU | 0.11872 | 0.11321 | 0.054520 | 0.039077 | 0.037684 | 0.047050 | 0.065261 |
+| LRU_2 | 0.084691 | 0.077624 | 0.046481 | 0.037257 | 0.036909 | 0.047953 | 0.061070 |
+| CLOCK | 0.11842 | 0.10729 | 0.055193 | 0.040958 | 0.036869 | 0.049037 | 0.063484 |
+
+And `./log/stat.svg`:
+
+![](https://img.yusanshi.com/upload/20211125124207537569.svg)
+
+Note the `PROCESS_IO` in `src/common.h` defaults to `false`, which means reading/writing from/to storage is skipped. If we set it to `true`, it will be (note the difference with above figure in `Elapsed time`):
+
+![](https://img.yusanshi.com/upload/20211125130532184674.svg)
