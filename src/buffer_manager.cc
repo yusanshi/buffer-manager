@@ -82,8 +82,9 @@ int BufferManager::RequestFrame(int page_id) {
   int victim_page_id = this->replacer_->GetVictim(page_id);
   if (VERBOSE) {
     std::cout << "Page " << page_id
-              << " not found in cache and buffer is full, found a victim frame"
-              << std::endl;
+              << " not found in cache and buffer is full, found a victim frame "
+                 "(page id: "
+              << victim_page_id << ")" << std::endl;
   }
   auto [victim_frame_id, victim_dirty] = this->page_table_[victim_page_id];
   if (victim_dirty) {
