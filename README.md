@@ -2,6 +2,8 @@
 
 A simple buffer pool manager with LRU, LRU-2 and CLOCK replacement policy, and multithreading support.
 
+![](https://img.yusanshi.com/upload/20211230173231128657.svg)
+
 ## Requirements
 
 - Linux-based OS

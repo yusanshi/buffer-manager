@@ -8,9 +8,9 @@
 
 auto CurrentTime() { return std::chrono::steady_clock::now(); }
 
-ParallelBufferPoolManager::ParallelBufferPoolManager(
-    std::string storage_filepath, std::string replacement_policy,
-    int num_threads)
+ParallelBufferManager::ParallelBufferManager(std::string storage_filepath,
+                                             std::string replacement_policy,
+                                             int num_threads)
     : storage_manager_(new StorageManager(storage_filepath)) {
   for (auto i = 0; i < num_threads; i++) {
     Replacer* replacer;
@@ -31,14 +31,14 @@ ParallelBufferPoolManager::ParallelBufferPoolManager(
   }
 }
 
-ParallelBufferPoolManager::~ParallelBufferPoolManager() {
+ParallelBufferManager::~ParallelBufferManager() {
   for (auto buffer_manager : this->buffer_managers_) {
     delete buffer_manager;
   }
   this->ReportPerformance();
 }
 
-void ParallelBufferPoolManager::ReportPerformance() {
+void ParallelBufferManager::ReportPerformance() {
   int hit_count = 0;
   int miss_count = 0;
   for (auto buffer_manager : this->buffer_managers_) {
@@ -60,7 +60,7 @@ void ParallelBufferPoolManager::ReportPerformance() {
             << "s" << std::endl;
 }
 
-void ParallelBufferPoolManager::Evaluate(std::string trace_filepath) {
+void ParallelBufferManager::Evaluate(std::string trace_filepath) {
   std::ifstream trace_file(trace_filepath);
   if (!trace_file.is_open()) {
     throw std::runtime_error("Failed to open trace file.");

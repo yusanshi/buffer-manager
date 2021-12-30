@@ -18,7 +18,7 @@ int main(int argc, char** argv) {
   }
   std::string replacement_policy = result["replacement"].as<std::string>();
   int num_threads = result["threads"].as<int>();
-  ParallelBufferPoolManager parallel_buffer_manager(
+  ParallelBufferManager parallel_buffer_manager(
       STORAGE_FILEPATH, replacement_policy, num_threads);
   parallel_buffer_manager.Evaluate(TRACE_FILEPATH);
 }

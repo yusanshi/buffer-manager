@@ -13,11 +13,11 @@
 #include "replacer/replacer.h"
 #include "storage_manager.h"
 
-class ParallelBufferPoolManager {
+class ParallelBufferManager {
  public:
-  ParallelBufferPoolManager(std::string storage_filepath,
-                            std::string replacement_policy, int num_threads);
-  ~ParallelBufferPoolManager();
+  ParallelBufferManager(std::string storage_filepath,
+                        std::string replacement_policy, int num_threads);
+  ~ParallelBufferManager();
   void Evaluate(std::string trace_filepath);
 
  private:
